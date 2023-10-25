@@ -1,0 +1,38 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eks-spot-cluster
+  region: ap-southeast-2
+
+vpc:
+  id: "vpc-004c8b743b19ade7f"
+  cidr: "10.128.0.0/20"
+  subnets:
+    public:
+      ap-southeast-2a: { id: subnet-086e050cb1bb60490 }
+      ap-southeast-2b: { id: subnet-0edc4d3906fbdcf9c }
+      ap-southeast-2c: { id: subnet-06a9ffff1d5601991 }
+
+managedNodeGroups:
+  - name: kube-master
+    instanceType: t3.small
+    labels: { role: builders }
+    minSize: 2
+    maxSize: 4
+    ssh: 
+      allow: true
+      publicKeyName: kube-keypair
+    tags:
+      Name: ng-db
+  - name: kube-worker
+    instanceType: t2.micro
+    labels: { role: builders }
+    minSize: 2
+    maxSize: 2
+    spot: true
+    ssh: 
+      allow: true
+      publicKeyName: kube-keypair
+    tags:
+      Name: ng-spot

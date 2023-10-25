@@ -1,0 +1,20 @@
+server {
+       listen 8000;
+
+       server_name 52.65.34.24;
+
+       root /var/www/laravel-starter/public;
+       index index index.html index.php;
+
+       #AllowOverride All for laravel add /index.php
+       location / {
+               try_files $uri $uri/ /index.php;
+       }
+
+       #For Read PHP File
+       location ~ \.php$ {
+               include snippets/fastcgi-php.conf;
+               fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+               include fastcgi_params;
+       }
+}
