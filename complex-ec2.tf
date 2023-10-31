@@ -51,6 +51,18 @@ resource "aws_instance" "ec2-attach-eip" {
   vpc_security_group_ids = [aws_security_group.allow_tls.id]
   key_name               = "server-keypair"
 
+  user_data = <<-EOF
+  #!/bin/bash
+  apt update -y && apt upgrade -y
+  apt install -y nginx
+  systemctl start nginx
+  apt install git
+  apt install php-cli php-xml php-curl php-zip php-mbstring php-dom php8.1-mysql
+  apt install mariadb-server
+  curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
+  apt install node-js
+  EOF
+
   tags = {
     Name = "ubuntu-terraform-eip"
   }
