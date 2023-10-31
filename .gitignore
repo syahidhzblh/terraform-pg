@@ -40,4 +40,7 @@ terraform.rc
 
 *terraform-provider-aws_v5.21.0_x5.exe
 
+# Ignore Variable File
+variable.tf
+
 # End of https://www.toptal.com/developers/gitignore/api/terraform
