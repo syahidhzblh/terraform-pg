@@ -12,13 +12,13 @@ locals {
 
 # Attachment Arguments #
 resource "aws_eip_association" "eip_assoc" {
-  instance_id   = aws_instance.ec2-attach-eip.id
+  instance_id   = aws_instance.prod-server.id
   allocation_id = aws_eip.lb.id
 }
 
 resource "aws_volume_attachment" "ebs" {
   device_name = "/dev/sdh"
-  instance_id = aws_instance.ec2-attach-eip.id
+  instance_id = aws_instance.prod-server.id
   volume_id   = aws_ebs_volume.ubuntu-storage.id
 }
 # End of Attachment Arguments #
@@ -27,7 +27,7 @@ resource "aws_eip" "lb" {
   domain = "vpc"
 }
 
-resource "aws_security_group" "allow_tls" {
+resource "aws_security_group" "allow_web_server" {
   name        = "web-server"
   description = "Allow port for default Web Server"
 
@@ -68,7 +68,7 @@ resource "aws_ebs_volume" "ubuntu-storage" {
   }
 }
 
-resource "aws_instance" "ec2-attach-eip" {
+resource "aws_instance" "prod-server" {
   ami                    = var.ami["ubuntu"]
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.allow_tls.id]
@@ -84,14 +84,14 @@ output "public_ip" {
 }
 
 output "instance_public_ip" {
-  value = aws_instance.ec2-attach-eip.public_ip
+  value = aws_instance.prod-server.public_ip
 }
 
 output "vpc_security_group_ids" {
-  value = aws_security_group.allow_tls.id
+  value = aws_security_group.allow_web_server.id
 }
 
 output "instance_security_group" {
-  value = aws_instance.ec2-attach-eip.security_groups
+  value = aws_instance.prod-server.security_groups
 }
 
