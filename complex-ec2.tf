@@ -1,19 +1,35 @@
 provider "aws" {
-  region = "ap-southeast-2"
+  region = var.region
 }
 
+locals {
+  prod_server = {
+    Name    = "prod-server-0"
+    Service = "Web Server"
+    Owner   = "Devops Team"
+  }
+}
+
+# Attachment Arguments #
 resource "aws_eip_association" "eip_assoc" {
   instance_id   = aws_instance.ec2-attach-eip.id
   allocation_id = aws_eip.lb.id
 }
+
+resource "aws_volume_attachment" "ebs" {
+  device_name = "/dev/sdh"
+  instance_id = aws_instance.ec2-attach-eip.id
+  volume_id   = aws_ebs_volume.ubuntu-storage.id
+}
+# End of Attachment Arguments #
 
 resource "aws_eip" "lb" {
   domain = "vpc"
 }
 
 resource "aws_security_group" "allow_tls" {
-  name        = "allow_tls"
-  description = "Allow TLS inbound traffic"
+  name        = "web-server"
+  description = "Allow port for default Web Server"
 
   ingress {
     description = "TLS from VPC"
@@ -39,33 +55,26 @@ resource "aws_security_group" "allow_tls" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "allow_tls"
-  }
+  tags = local.prod_server
 }
 
 #Instance Argument
-resource "aws_instance" "ec2-attach-eip" {
-  ami                    = var.ami_ubuntu
-  instance_type          = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.allow_tls.id]
-  key_name               = "server-keypair"
-
-  user_data = <<-EOF
-  #!/bin/bash
-  apt update -y && apt upgrade -y
-  apt install -y nginx
-  systemctl start nginx
-  apt install git
-  apt install php-cli php-xml php-curl php-zip php-mbstring php-dom php8.1-mysql
-  apt install mariadb-server
-  curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
-  apt install node-js
-  EOF
+resource "aws_ebs_volume" "ubuntu-storage" {
+  availability_zone = "ap-southeast-2a"
+  size              = 8
 
   tags = {
-    Name = "ubuntu-terraform-eip"
+    Name = "ubuntu-volume"
   }
+}
+
+resource "aws_instance" "ec2-attach-eip" {
+  ami                    = var.ami["ubuntu"]
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.allow_tls.id]
+  key_name               = var.keypair
+
+  tags = local.prod_server
 }
 
 
@@ -85,3 +94,4 @@ output "vpc_security_group_ids" {
 output "instance_security_group" {
   value = aws_instance.ec2-attach-eip.security_groups
 }
+
