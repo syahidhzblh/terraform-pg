@@ -1,7 +1,7 @@
 # Terraform Playground
 
 This repository for documentation Terraform config file.
-You can use this sample code for your provisining cloud infrastructure.
+You can use this sample code for provisioning your cloud infrastructure.
 
 ## Provider Included
 
