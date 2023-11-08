@@ -39,6 +39,8 @@ override.tf.json
 terraform.rc
 
 *terraform-provider-aws_v5.21.0_x5.exe
+.terraform.lock.hcl
+*.terraform.lock.hcl
 
 # Ignore Variable File
 variable.tf
