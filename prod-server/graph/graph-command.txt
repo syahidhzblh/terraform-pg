@@ -1,0 +1,9 @@
+terraform graph > graph.dot
+
+validate & see graph.dot after export -> cat graph.dot
+
+Make sure already installed "Graphviz"
+
+convert .dot to .svg
+
+cat graph.dot | -Tsvg > graph.svg

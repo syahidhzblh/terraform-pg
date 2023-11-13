@@ -1,4 +1,4 @@
-# resource "aws_ebs_volume" "prod-0-volume" {
+# resource "aws_ebs_volume" "prod_volume_0" {
 #   availability_zone = "ap-southeast-2a"
 #   size              = 8
 

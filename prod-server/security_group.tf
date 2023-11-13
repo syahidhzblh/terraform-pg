@@ -1,28 +1,22 @@
-resource "aws_security_group" "prod-0-sg" {
+variable "prod-port" {
+  type    = list(any)
+  default = [80, 443, 22, 2222]
+}
+
+resource "aws_security_group" "prod_sg_0" {
   name        = "web-server"
   description = "Allow Web Server Port for Production"
+  vpc_id      = "vpc-004c8b743b19ade7f"
 
-  ingress {
-    description = "HTTP Access"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    description = "SSH Access"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "Allow Custom SSH Port"
-    from_port   = 2222
-    to_port     = 2222
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "ingress" {
+    for_each = var.prod-port
+    iterator = port
+    content {
+      from_port   = port.value
+      to_port     = port.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
 
   egress {

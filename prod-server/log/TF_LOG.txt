@@ -1,0 +1,10 @@
+For See Log or Debugging Terraform
+
+TF_LOG
+TF_LOG_PATH
+
+example
+
+
+export TF_LOG=
+export TF_LOG_PATH=(path).log
