@@ -7,6 +7,14 @@ variable "keypair" {
   default = "prod-keypair"
 }
 
+variable "subnet_prod" {
+  default = "subnet-086e050cb1bb60490"
+}
+
+variable "vpc_prod" {
+  default = "vpc-004c8b743b19ade7f"
+}
+
 # Tag Argument
 locals {
   prod-tag = {

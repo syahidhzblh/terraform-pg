@@ -6,7 +6,7 @@ variable "prod-port" {
 resource "aws_security_group" "prod_sg_0" {
   name        = "web-server"
   description = "Allow Web Server Port for Production"
-  vpc_id      = "vpc-004c8b743b19ade7f"
+  vpc_id      = var.vpc_prod.id
 
   dynamic "ingress" {
     for_each = var.prod-port

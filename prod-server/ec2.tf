@@ -3,7 +3,7 @@ resource "aws_instance" "prod_server_0" {
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.prod-keypair.key_name
   vpc_security_group_ids = [aws_security_group.prod_sg_0.id]
-  subnet_id              = "subnet-086e050cb1bb60490"
+  subnet_id              = var.subnet_prod.id
 
   ebs_block_device {
     device_name = "/dev/sda1"
